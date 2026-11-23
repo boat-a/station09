@@ -1,0 +1,28 @@
+
+name: Build Station09.exe
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Download source code
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build Station09
+        working-directory: station09
+        run: |
+          cl /std:c++17 /EHsc /O2 /Zi /Fe:Station09.exe src/main_win32.cpp user32.lib gdi32.lib winmm.lib
+
+      - name: Upload game EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: Station09-Windows
+          path: station09/Station09.exe
